@@ -31,7 +31,7 @@ class Car {
     const Car();
 
     void start() {
-        _engine.start(); // Null reference exception
+        engine.start(); // Null reference exception
     }
 }
 ```
@@ -44,7 +44,7 @@ Following the principles of **dependency injection**, this is what we can do:
 
 The dependencies are passed to a class through its constructor.
 
-This pattern makes it it clear what dependencies a class require to function, and it ensures that the dependencies are available as soon as the class is created.
+This pattern makes it clear what dependencies a class require to function, and it ensures that the dependencies are available as soon as the class is created.
 
 If we implement constructor injection in our `Car` class:
 
@@ -59,7 +59,7 @@ class Car {
 }
 ```
 
-Since `Car.engine` is `final` and also required in the constructor, we make sure that it will never be null, and therefore will always work.
+Since `Car.engine` is `final` and also required in the constructor, we make sure that it will never be null.
 
 ```dart main.dart
 void main() {
@@ -69,7 +69,7 @@ void main() {
 }
 ```
 
-Now let's imagine that you're a car manufacturer and is creating parts of a car. Since cars are not only made of engines, you now have this new class structure:
+Now let's imagine that you're a car manufacturer and you are creating parts of a car. Since cars are not only made of engines, you now have this new class structure:
 
 ```dart car.dart
 class Car {
@@ -101,7 +101,7 @@ class Car {
 
 Since the engine is `final` and must be passed on in the constructor, the class won't compile until you give it a working engine. It doesn't make sense that your doors doesn't work until you have a working engine.
 
-> With the construction injection approach, you're only able to have a car after you have all the pieces already done, and can not have an "incomplete" car.
+> With the construction injection approach, you're only able to have a Car instance after you have all the pieces already done, and can not have an "incomplete" car.
 
 - **Setter injection**
 
@@ -109,7 +109,7 @@ The dependencies are set on a class through setter methods.
 
 This pattern allows for more flexibility as the dependencies can be set or changed after the class is created.
 
-Whenever you have an instance of Car, you can just use `setEngine` to set an engine to the car. This fixes the previous problem: now we can have a Car and later give it an engine.
+Whenever you have an instance of `Car`, you can just use `setEngine` to set an engine to the car. This fixes the previous problem: now we can have a `Car` and later give it an engine.
 
 ```dart car.dart
 class Car {
@@ -171,7 +171,7 @@ This pattern can make it easier to manage dependencies in large applications, bu
 
 ## Real life example and implementation
 
-In my [OneDart project](), I need to create an authentication layer so that my users can create accounts and authenticate themselves.
+In one of my side projects I need to create an authentication layer so that my users can create accounts and authenticate themselves.
 
 Since I was still deciding on which one to use, I created a dependency injection structure so that I can easily swap out whenever I'd like to test another authentication service.
 
@@ -197,7 +197,7 @@ class AuthenticationRepository {
 }
 ```
 
-This class has a method `signIn` that takes an user's _email_ and _password_, then give it to the corresponding provider. It also returns an `UserSession`, class responsible to store the current user's data and authentication token.
+This class has a method `signIn` that takes an user's `email` and `password`, then give it to the corresponding provider. It also returns an `UserSession`, class responsible to store the current user's data and authentication token.
 
 ```dart UserSession.dart
 class UserSession {
@@ -213,9 +213,7 @@ class UserSession {
 }
 ```
 
-In this class, `sessionToken` would be the `Autheorization` header we're supposed to send to our RESTful API.
-
-Take notice of `AuthenticationRepository.provider`. It's an instance of the class `AuthenticationProvider`. Here's the implementation:
+Take notice of `AuthenticationRepository.provider`. It's an instance of the class `AuthenticationProvider`. Here's the configuration:
 
 ```dart authentication_provider.dart
 abstract class AuthenticationProvider {
@@ -225,7 +223,7 @@ abstract class AuthenticationProvider {
 
 Since this class is abstract, in order to create a repository that actually works, you need to give it an implementation.
 
-So I have created two classes: `FirebaseProvider` and `CognitoProvider`. These classes are responsible for managing user authentication with Firebase's authentication and AWS Cognito's authentication respectively.
+So I have created two classes: `FirebaseProvider` and `CognitoProvider`. These classes are responsible for managin user authentication with Firebase's and Cognito's APIs respectively.
 
 ```dart FirebaseProvider
 class FirebaseProvider implements AuthenticationProvider {
